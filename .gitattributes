@@ -1,0 +1,8 @@
+# Ensure consistent line endings
+* text=auto
+
+# Exclude binary files from automatic line ending conversion
+*.jpg binary
+*.png binary
+*.gif binary
+
