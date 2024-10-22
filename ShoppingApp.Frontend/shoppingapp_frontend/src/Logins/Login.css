@@ -3,7 +3,13 @@
   height: 100vh;
   justify-content: center;
   align-items: center;
-  background: #f5f7fa;
+  background-image: url("/src/images/shopping2.jpg"); /* Replace with the actual image path */
+  background-size: cover;
+  width: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh; /* Ensures the background covers the full screen */
+  padding: 20px;
 }
 
 .login-form {
@@ -28,12 +34,12 @@
 }
 
 .login-form button {
-  width: 100%;
+  width: 27%;
   padding: 12px;
   background-color: #4a90e2;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 7px;
   cursor: pointer;
 }
 
@@ -50,4 +56,7 @@
 
 .register-link:hover {
   text-decoration: underline;
+}
+.p {
+  margin-top: 10px;
 }

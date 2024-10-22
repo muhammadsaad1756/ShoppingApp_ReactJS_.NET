@@ -3,21 +3,35 @@
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
-  background-color: #f8f9fa; /* Light grey for consistency with Sellers page */
+  background-color: #f8f9fa;
 }
 
 /* Page title */
 .page-title {
-  font-size: 2.5rem;
+  font-size: 2rem;
   text-align: center;
   margin-top: 55px;
   margin-bottom: 30px;
-
-  color: #007bff; /* Consistent with the hero section color of Sellers page */
+  color: black;
   font-weight: bold;
 }
 
-/* Items grid layout (Bootstrap-like) */
+/* Search bar */
+.search-bar {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.search-bar input {
+  width: 50%;
+  margin: 0 auto;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* Items grid layout */
 .items-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -36,13 +50,13 @@
 }
 
 .item-card:hover {
-  transform: scale(1.05); /* Slight zoom on hover */
+  transform: scale(1.05);
   box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.15);
 }
 
 /* Item title */
 .item-card h3 {
-  margin-bottom: 10px;
+  margin-bottom: 26px;
   color: #333;
 }
 
@@ -53,30 +67,29 @@
 
 .price {
   font-weight: bold;
-  color: #28a745; /* Green like in Sellers page */
+  color: #28a745;
   margin-top: 10px;
 }
 
 /* View Item button */
 .view-item-button {
-  background-color: #007bff; /* Bootstrap primary blue */
+  background-color: #007bff;
   color: white;
   border: none;
-  margin-left: 20px;
   padding: 7px;
   border-radius: 6px;
   cursor: pointer;
   font-size: 1rem;
   transition: background-color 0.2s ease;
+  width: 43%;
 }
 
 .view-item-button:hover {
-  background-color: #0056b3; /* Darker blue on hover */
+  background-color: #0056b3;
 }
 
 /* Logout button */
 .logout-button {
-  align-self: flex-end;
   background-color: #dc3545;
   color: white;
   border: none;
@@ -86,11 +99,10 @@
   cursor: pointer;
   margin-top: 10px;
   float: right;
-  transition: background-color 0.2s ease;
 }
 
 .logout-button:hover {
-  background-color: #c82333; /* Darker red on hover */
+  background-color: #c82333;
 }
 
 /* Media query for smaller screens */

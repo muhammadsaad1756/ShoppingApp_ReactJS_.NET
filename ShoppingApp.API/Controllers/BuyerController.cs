@@ -40,23 +40,8 @@ namespace ShoppingApp.API.Controllers
         }
 
 
-        //[Authorize(Roles = "buyer")]
-        //[HttpGet("all-items-report")]
-        //public async Task<IActionResult> AllItemsReport([FromQuery] string searchTerm = null)
-        //{
-        //    // Start with all items
-        //    var items = _context.Items.AsQueryable();
 
-        //    // Filter by search term if provided
-        //    if (!string.IsNullOrEmpty(searchTerm))
-        //    {
-        //        items = items.Where(i => i.Name.Contains(searchTerm));
-        //    }
-
-        //    // Return the list of items as a response
-        //    var itemsList = await items.ToListAsync();
-        //    return Ok(itemsList);
-        //}
+       
 
         [Authorize(Roles = "buyer")]
         [HttpGet("view-item/{id}")]
@@ -72,7 +57,7 @@ namespace ShoppingApp.API.Controllers
         }
 
         [HttpPost("add-to-cart")]
-        public IActionResult AddToCart(int itemId, int quantity)
+        public IActionResult AddToCart([FromBody] CartRequest request)
         {
             var buyerId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             var shoppingCart = _context.ShoppingCarts.FirstOrDefault(sc => sc.UserId == buyerId);
@@ -84,29 +69,37 @@ namespace ShoppingApp.API.Controllers
                 _context.SaveChanges();
             }
 
-            var cartItem = _context.CartItems.FirstOrDefault(ci => ci.BuyerId == buyerId && ci.ItemId == itemId);
+            var cartItem = _context.CartItems.FirstOrDefault(ci => ci.BuyerId == buyerId && ci.ItemId == request.ItemId);
             if (cartItem == null)
             {
                 cartItem = new CartItem
                 {
-                    ItemId = itemId,
+                    ItemId = request.ItemId,
                     BuyerId = buyerId,
                     ShoppingCartId = shoppingCart.Id,
-                    Quantity = quantity,
-                    TotalPrice = _context.Items.Find(itemId).Price * quantity
+                    Quantity = request.Quantity,
+                    TotalPrice = _context.Items.Find(request.ItemId).Price * request.Quantity
                 };
                 _context.CartItems.Add(cartItem);
             }
             else
             {
-                cartItem.Quantity += quantity;
-                cartItem.TotalPrice = _context.Items.Find(itemId).Price * cartItem.Quantity;
+                cartItem.Quantity += request.Quantity;
+                cartItem.TotalPrice = _context.Items.Find(request.ItemId).Price * cartItem.Quantity;
                 _context.CartItems.Update(cartItem);
             }
 
             _context.SaveChanges();
             return Ok("Item added to cart.");
         }
+
+        // Request model for adding to cart
+        public class CartRequest
+        {
+            public int ItemId { get; set; }
+            public int Quantity { get; set; }
+        }
+
 
         [HttpGet("shopping-cart")]
         public async Task<IActionResult> ShoppingCart()

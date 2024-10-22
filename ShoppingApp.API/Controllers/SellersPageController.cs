@@ -22,11 +22,11 @@ namespace ShoppingApp.API.Controllers
         private int GetLoggedInUserId()
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            Console.WriteLine($"Logged in User ID: {userIdClaim}");
             return userIdClaim != null && int.TryParse(userIdClaim.Value, out var userId) ? userId : 0;
         }
-
         [HttpGet("user-homepage")]
-        [Authorize(Roles = "seller")] // Ensure this action requires the seller role
+        [Authorize(Roles = "seller")]
         public IActionResult UserHomePage(string searchString = null)
         {
             var userId = GetLoggedInUserId();
@@ -35,10 +35,8 @@ namespace ShoppingApp.API.Controllers
                 return Unauthorized("User is not logged in.");
             }
 
-            // Start with items for the logged-in seller
             var itemsForSale = _context.Items.Where(item => item.SellerId == userId);
 
-            // Filter by search string if provided
             if (!string.IsNullOrEmpty(searchString))
             {
                 itemsForSale = itemsForSale.Where(i => i.Name.Contains(searchString) || i.Description.Contains(searchString));
@@ -46,6 +44,7 @@ namespace ShoppingApp.API.Controllers
 
             return Ok(itemsForSale.ToList());
         }
+
 
         [HttpPost("AddEditItem")]
         [Authorize(Roles = "seller")]

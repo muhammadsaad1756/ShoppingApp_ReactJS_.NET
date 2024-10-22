@@ -8,6 +8,7 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.AddConsole();
+
 // Add services to the container.
 builder.Services.AddControllers();
 
@@ -45,14 +46,12 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // CORS configuration
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReactApp",
-        builder =>
-        {
-            builder.WithOrigins("http://localhost:3000") // React app URL
-                   .AllowAnyHeader()
-                   .AllowAnyMethod()
-                   .AllowCredentials();
-        });
+    options.AddPolicy("AllowReactApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000") // Ensure this matches your React app URL
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
 });
 
 // Add Swagger/OpenAPI support
@@ -96,30 +95,27 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "ShoppingApp.API v1");
-
         c.RoutePrefix = string.Empty;
-
     });
 }
 
-app.UseHttpsRedirection();
-app.UseStaticFiles(); // Serve static files, if needed
 // Enable CORS
 app.UseCors("AllowReactApp");
-
-// Authentication middleware
-app.UseAuthentication();
 
 // Routing middleware
 app.UseRouting();
 
-// Authorization middleware - must be placed between UseRouting and UseEndpoints
+// Authentication middleware
+app.UseAuthentication();
+
+// Authorization middleware - must be placed after UseAuthentication
 app.UseAuthorization();
 
 // Endpoint routing middleware
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();
-});
+app.MapControllers();
+
+// HTTPS redirection and static files
+app.UseHttpsRedirection();
+app.UseStaticFiles(); // Serve static files, if needed
 
 app.Run();

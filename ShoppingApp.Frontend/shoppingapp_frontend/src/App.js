@@ -1,38 +1,87 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Login from "./Logins/Login"; // Adjust the path if necessary
-import Register from "./Register/Register"; // Import the registration/editing component
-import AllItemsReport from "./Buyer/AllItemsReport"; // Import the All Items Report component
-import ViewItem from "./Buyer/ViewItem"; // Import the View Item component
-import ShoppingCart from "./Buyer/ShoppingCart"; // Import the Shopping Cart component
-import SellerHomePage from "./Sellers/SellerHomePage"; // Import Seller dashboard
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
+import Login from "./Logins/Login";
+import Register from "./Register/Register";
+import AllItemsReport from "./Buyer/AllItemsReport";
+import ViewItem from "./Buyer/ViewItem";
+import CheckOut from "./Buyer/CheckOut";
+import ShoppingCart from "./Buyer/ShoppingCart";
+import SellerHomePage from "./Sellers/SellerHomePage";
 import AddEditItem from "./Sellers/AddEditItem";
-import { useAuth } from "./Context/AuthContext"; // Assuming you have an auth context to manage user state
+import { useAuth } from "./Context/AuthContext";
+
+// PrivateRoute Component to protect certain routes
+const PrivateRoute = ({ children }) => {
+  const token = localStorage.getItem("token");
+  return token ? children : <Navigate to="/login" />;
+};
 
 const App = () => {
-  const { user } = useAuth(); // Get user data from Auth context
+  const { user } = useAuth();
 
   return (
     <Router>
       <Routes>
-        {/* Login and Register routes */}
+        {/* Public routes for Login and Register */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-
-        {/* Route for editing user profile */}
         <Route path="/edit-user" element={<Register existingUser={user} />} />
 
-        {/* Seller's related routes  */}
-        <Route path="/sellers-dashboard" element={<SellerHomePage />} />
-        <Route path="/add-edit-item" element={<AddEditItem />} />
+        {/* Protected routes for Sellers */}
+        <Route
+          path="/sellers-dashboard"
+          element={
+            <PrivateRoute>
+              <SellerHomePage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/add-edit-item"
+          element={
+            <PrivateRoute>
+              <AddEditItem />
+            </PrivateRoute>
+          }
+        />
 
-        {/* Buyer-related routes */}
-        <Route path="/all-items" element={<AllItemsReport />} />
-        <Route path="/view-item/:id" element={<ViewItem />} />
-        <Route path="/shopping-cart" element={<ShoppingCart />} />
+        {/* Protected routes for Buyers */}
+        <Route
+          path="/all-items"
+          element={
+            <PrivateRoute>
+              <AllItemsReport />
+            </PrivateRoute>
+          }
+        />
+        <Route path="/checkout" element={<CheckOut />} />
+        <Route
+          path="/view-item/:id"
+          element={
+            <PrivateRoute>
+              <ViewItem />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/shopping-cart"
+          element={
+            <PrivateRoute>
+              <ShoppingCart />
+            </PrivateRoute>
+          }
+        />
 
-        {/* Redirect to All Items Report if logged in, else to Login */}
-        <Route path="/" element={user ? <AllItemsReport /> : <Login />} />
+        {/* Default route, redirect to All Items Report or Login */}
+        <Route
+          path="/"
+          element={user ? <AllItemsReport /> : <Navigate to="/login" />}
+        />
       </Routes>
     </Router>
   );

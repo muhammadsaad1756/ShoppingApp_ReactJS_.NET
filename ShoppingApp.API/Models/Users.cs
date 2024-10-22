@@ -18,7 +18,7 @@ namespace ShoppingApp.API.Models
         [StringLength(100, ErrorMessage = "Name cannot exceed 100 characters")]
         public string Name { get; set; }
 
-        [Range(18, 100, ErrorMessage = "Age must be between 18 and 100")]
+        
         public int Age { get; set; }
 
         public string ProfilePictureUrl { get; set; }
@@ -27,6 +27,6 @@ namespace ShoppingApp.API.Models
         [Required]
         public string Role { get; set; } // Either "Seller" or "Buyer"
 
-        public ICollection<Order> Orders { get; set; }
+        //public ICollection<Order> Orders { get; set; }
     }
 }

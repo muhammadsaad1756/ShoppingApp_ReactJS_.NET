@@ -10,9 +10,59 @@ h2 {
 }
 
 h3 {
-  margin-top: 1.5rem;
+  margin-top: 0.5rem;
   color: #333;
-  text-align: center;
+  display: inline-block;
+}
+
+form {
+  background-color: #f8f9fa !important;
+  padding: 0px !important;
+  border-radius: 0px !important;
+  box-shadow: 0px 0px 0px rgba(0, 0, 0, 0) !important;
+  width: 515px !important;
+}
+
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 59px;
+}
+
+.search-form {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.search-form .form-control {
+  width: 300px;
+  margin-right: 10px;
+}
+
+.search-button {
+  background-color: #007bff;
+  border: none;
+  width: 100px;
+  color: white;
+  margin-right: 10px;
+  margin-top: 10px;
+  height: 38px;
+}
+.search-button:hover {
+  background-color: #0d5df1; /* Darker shade for hover */
+}
+
+.clear-button {
+  background-color: #6c757d;
+  border: none;
+  width: 116px;
+  color: white;
+  margin-top: 10px;
+  height: 38px;
+}
+.clear-button:hover {
+  background-color: #575d63; /* Darker shade for hover */
 }
 
 .items-grid {
@@ -34,23 +84,6 @@ h3 {
   transform: scale(1.05);
 }
 
-.item-card h4 {
-  margin-bottom: 10px;
-  color: #333;
-}
-
-.item-card p {
-  color: #777;
-  margin-bottom: 10px;
-}
-
-.price {
-  font-weight: bold;
-  color: #28a745;
-  display: inline-block;
-  margin-top: 10px;
-}
-
 .hero-section {
   background: #007bff;
   color: white;
@@ -62,9 +95,11 @@ h3 {
 .logout-button {
   margin-top: 15px;
   margin-left: auto;
-  margin-right: auto;
   display: block;
-  width: 120px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  width: 10%;
 }
 
 .btn-primary {
@@ -85,14 +120,32 @@ h3 {
   background-color: #749abb; /* Slightly different from Add button */
   color: white;
   border: none;
-  width: 33%;
+  width: 67%;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-bottom: 8px; /* Added margin for space between Edit and Delete buttons */
+}
+
+.btn-edit:hover {
+  background-color: #5a6268; /* Darker shade for hover */
+}
+
+/* Styling for Delete button */
+.btn-delete {
+  padding: 5px 10px;
+  font-size: 14px;
+  background-color: #d9534f; /* Red for Delete button */
+  color: white;
+  border: none;
+  width: 67%;
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
 
-.btn-edit:hover {
-  background-color: #5a6268; /* Darker shade for hover */
+.btn-delete:hover {
+  background-color: #c9302c; /* Darker shade for hover */
 }
 
 .card-title {

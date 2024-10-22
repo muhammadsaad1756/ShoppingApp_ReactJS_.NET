@@ -13,6 +13,7 @@ using ShoppingApp.API.Data;
 using ShoppingApp.API.Models;
 using System;
 using Microsoft.AspNetCore.Authorization;
+using System.IO;
 
 namespace ShoppingApp.API.Controllers
 {
@@ -84,6 +85,7 @@ namespace ShoppingApp.API.Controllers
         {
             if (!ModelState.IsValid)
             {
+                // Log the validation errors to understand the bad request issue
                 return BadRequest(ModelState);
             }
 
@@ -129,5 +131,21 @@ namespace ShoppingApp.API.Controllers
         {
             return Ok("Logged out successfully.");
         }
+
+        // New endpoint to serve manifest.json
+        //[AllowAnonymous]
+        //[HttpGet("manifest.json")]
+        //public IActionResult GetManifest()
+        //{
+        //    var manifestPath = Path.Combine(Directory.GetCurrentDirectory(), "/public/manifest.json");
+
+        //    if (!System.IO.File.Exists(manifestPath))
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var json = System.IO.File.ReadAllText(manifestPath);
+        //    return Content(json, "application/json");
+        //}
     }
 }

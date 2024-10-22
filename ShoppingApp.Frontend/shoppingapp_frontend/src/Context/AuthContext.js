@@ -1,45 +1,61 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 
-// Create the Auth context
 const AuthContext = createContext();
 
-// Provider component
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null); // State for the user
+  const [user, setUser] = useState(null);
 
-  // Mock function to simulate fetching user data (replace with real API call)
-  const fetchUserData = async () => {
-    const userData = JSON.parse(localStorage.getItem("user")); // For demo purposes
-    setUser(userData);
+  const isTokenExpired = (token) => {
+    if (!token) return true;
+    const decodedToken = jwtDecode(token);
+    return decodedToken.exp * 1000 < Date.now();
+  };
+
+  const getUserFromToken = (token) => {
+    const decodedToken = jwtDecode(token);
+    const role =
+      decodedToken.role ||
+      decodedToken[
+        "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+      ];
+    return { username: decodedToken.unique_name, role };
   };
 
   useEffect(() => {
-    fetchUserData(); // Fetch user data on mount
+    const token = localStorage.getItem("token");
+    if (token && !isTokenExpired(token)) {
+      const userData = getUserFromToken(token);
+      setUser(userData);
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    } else {
+      logout();
+    }
   }, []);
 
   const login = (userData) => {
-    setUser(userData);
-    localStorage.setItem("user", JSON.stringify(userData)); // Store user in localStorage
+    const { token } = userData;
+    const userFromToken = getUserFromToken(token);
+
+    localStorage.setItem("token", token);
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    setUser(userFromToken);
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("user"); // Clear user data on logout
-  };
-
-  const editUserDetails = (updatedUser) => {
-    setUser(updatedUser);
-    localStorage.setItem("user", JSON.stringify(updatedUser)); // Update user in localStorage
+    localStorage.removeItem("token");
+    delete axios.defaults.headers.common["Authorization"];
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, editUserDetails }}>
+    <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-// Custom hook to use the Auth context
 export const useAuth = () => {
   return useContext(AuthContext);
 };

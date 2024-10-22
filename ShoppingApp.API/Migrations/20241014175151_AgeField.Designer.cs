@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ShoppingApp.API.Data;
 
@@ -11,9 +12,11 @@ using ShoppingApp.API.Data;
 namespace ShoppingApp.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241014175151_AgeField")]
+    partial class AgeField
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -100,7 +103,12 @@ namespace ShoppingApp.API.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("UsersId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UsersId");
 
                     b.ToTable("Orders");
                 });
@@ -205,9 +213,21 @@ namespace ShoppingApp.API.Migrations
                     b.Navigation("Item");
                 });
 
+            modelBuilder.Entity("ShoppingApp.API.Models.Order", b =>
+                {
+                    b.HasOne("ShoppingApp.API.Models.Users", null)
+                        .WithMany("Orders")
+                        .HasForeignKey("UsersId");
+                });
+
             modelBuilder.Entity("ShoppingApp.API.Models.ShoppingCart", b =>
                 {
                     b.Navigation("CartItems");
+                });
+
+            modelBuilder.Entity("ShoppingApp.API.Models.Users", b =>
+                {
+                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }
